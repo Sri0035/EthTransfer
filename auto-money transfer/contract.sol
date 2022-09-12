@@ -1,21 +1,24 @@
-pragma solidity ^0.8.9;
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.16;
 
+contract ethTransfer{
+    address public owner;
 
-contract Transact{
-    
-    
-    address private sender = 0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db;
-
-    
-    constructor() public payable {
-        require(msg.value > 0.01 ether); 
+   modifier restricted(){
+        require(msg.sender == owner);
+        _;
     }
 
-
-    function send(address payable user) payable external {
-        uint money = msg.value;
-        user.transfer(address(this).balance);
+    constructor (address creator) public payable{
+        owner = creator;
     }
 
- 
+    function transfer(address payable recipient, uint money) public{
+
+        payable(recipient).transfer(money);
+    }
+
+    function refill() public payable restricted{}
+
+    
 }
